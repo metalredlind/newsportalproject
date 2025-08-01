@@ -52,7 +52,6 @@ const AddWriter = () => {
                         <button disabled={loader} className='px-3 py-[6px] bg-blue-500 rounded-md text-white hover:bg-blue-800'>
                             {loader ? 'Loading...' : 'Add Writer'}
                         </button>
-
                     </div>
                 </form>
             </div>

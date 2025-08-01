@@ -10,7 +10,7 @@ const Sidebar = () => {
     //console.log(pathname);
 
     const userInfo = {
-        role:"admin"
+        role:"writer"
     }
 
     return (
