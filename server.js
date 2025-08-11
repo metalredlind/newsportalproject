@@ -1,5 +1,5 @@
 const express = require('express');
-const app =express();
+const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
 const body_parser = require('body-parser');
@@ -13,7 +13,8 @@ if (process.env.mode === 'production') {
     app.use(cors())
 } else {
     app.use(cors({
-        origin: ["http://localhost:5173" , "http://localhost:3000"]
+        origin: ["http://localhost:5173", "http://localhost:3000"],
+        credentials: true
     }))
 }
 
