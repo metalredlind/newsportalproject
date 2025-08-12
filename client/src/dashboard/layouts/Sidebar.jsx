@@ -1,16 +1,27 @@
 import React, { useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdDashboard } from "react-icons/md";
 import { BiNews } from "react-icons/bi";
 import { PiUsersFill } from "react-icons/pi";
 import { FaHouseUser, FaPlus } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import storeContext from '../../context/storeContext';
 
 const Sidebar = () => {
     const { pathname } = useLocation();
     //console.log(pathname);
+    const { store, dispatch } = useContext(storeContext);
+    const navigate = useNavigate();
+    const logout = () => {
+        localStorage.removeItem('newsToken');
+        dispatch({ 
+            type: 'logout',
+            payload: ''
+        });
+        navigate('/login');
+    };
 
-    const { store } = useContext(storeContext);
+
 
     return (
         <div className='w-[250px] h-screen fixed left-0 top-0 bg-[#dadaff]'>
@@ -68,13 +79,18 @@ const Sidebar = () => {
                     </Link>
                 </li>
                 
-                
-                
                 <li>
                     <Link to={'/dashboard/profile'} className={`px-3 ${pathname === '/dashboard/profile' ? 'bg-indigo-500 text-white' : 'bg-white text-[#404040f6]'} py-2 hover:shadow-lg hover:shadow-indigo-500/20 w-full rounded-lg flex gap-x-2 justify-start items-center hover:bg-indigo-500 hover:text-white`}>
                         <span className='text-[18px]'><FaHouseUser /></span>
                         <span className='text-[18px]'>Profile</span>
                     </Link>
+                </li>
+
+                <li>
+                    <div onClick={logout} className={`px-3 bg-white text-[#404040f6] py-2 hover:shadow-lg hover:shadow-indigo-500/20 w-full rounded-lg flex gap-x-2 justify-start items-center hover:bg-indigo-500 hover:text-white`}>
+                        <span className='text-[18px]'><FiLogOut /></span>
+                        <span className='text-[18px]'>Logout</span>
+                    </div>
                 </li>
             </ul>
             
