@@ -40,7 +40,7 @@ const Login = () => {
             navigate('/dashboard');
         } catch (error) {
             setLoader(false);
-            toast.success(error.message.data.message);
+            toast.error(error.response.data.message);
         }
     }
 
