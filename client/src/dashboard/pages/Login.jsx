@@ -10,6 +10,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
     const { dispatch } = useContext(storeContext);
+    
     const [state, setState] = useState({
         email: "",
         password: ""
