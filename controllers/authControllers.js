@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 class authController {
+
     login = async(req,res) => {
         const { email, password } = req.body
 
@@ -42,6 +43,11 @@ class authController {
         }
         
     }
+
+    add_writer = async(req,res) => {
+        console.log(req.body)
+    }
+
 }
 
 module.exports = new authController()
