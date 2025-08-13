@@ -45,7 +45,40 @@ class authController {
     }
 
     add_writer = async(req,res) => {
-        console.log(req.body)
+        const { name, email, password, category } = req.body
+        if (!name) {
+            return res.status(404).json({ message: 'Please provide the name' })
+        }
+        
+        if (!email) {
+            return res.status(404).json({ message: 'Please provide the email' })
+        }
+
+        if (!password) {
+            return res.status(404).json({ message: 'Please provide the password' })
+        }
+        
+        if (!category) {
+            return res.status(404).json({ message: 'Please provide the category' })
+        }
+
+        try {
+            const writer = await authModel.findOne({ email: email.trim() })
+            if (writer) {
+                return res.status(404).json({ message: 'Writer already existed' })
+            } else {
+                const new_writer = await authModel.create({
+                    name: name.trim(),
+                    email: email.trim(),
+                    password: await bcrypt.hash(password.trim(), 10),
+                    category: category.trim(),
+                    role: 'writer'
+                })
+                return res.status(201).json({ message: 'Writer added successfully', writer: new_writer })
+            }
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' })
+        }
     }
 
 }
