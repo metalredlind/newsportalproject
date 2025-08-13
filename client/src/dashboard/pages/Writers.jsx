@@ -1,10 +1,36 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import profile from '../../assets/profile.png';
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
+import { base_url } from '../../config/config';
+import axios from 'axios';
+import storeContext from '../../context/storeContext';
 
 const Writers = () => {
+
+    const { store } = useContext(storeContext);
+    const [writers, setWriters] = useState([]);
+
+    const get_writers = async () => {
+        try {
+            const {data} = await axios.get(`${base_url}/api/news/writers`, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            });
+            setWriters(data.writers);
+            //console.log(data)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        get_writers()
+    },[]);
+
+
     return (
         <div className='bg-white rounded-lg shadow-md'>
             <div className='flex justify-between items-center px-6 py-4 border-b border-gray-400'>
@@ -28,19 +54,19 @@ const Writers = () => {
                         </tr>
                     </thead>
                     <tbody className='text-gray-600'>
-                        {[1,2,3,4].map((item, index) => (
+                        {writers.map((item, index) => (
                             <tr key={index} className='border-t'>
-                                <td className='py-4 px-6'>1</td>
-                                <td className='py-4 px-6'>Name</td>
-                                <td className='py-4 px-6'>Category Name</td>
-                                <td className='py-4 px-6'>Writer Role</td>
+                                <td className='py-4 px-6'>{index + 1}</td>
+                                <td className='py-4 px-6'>{ item.name}</td>
+                                <td className='py-4 px-6'>{ item.category}</td>
+                                <td className='py-4 px-6'>{ item.role}</td>
                                 <td className='py-4 px-6'>
                                     <img src={profile} alt="news post" className='w-10 h-10 rounded-full object-cover' />
                                 </td>
-                                <td className='py-4 px-6'>test@test.com</td>
+                                <td className='py-4 px-6'>{ item.email}</td>
                                 <td className='py-4 px-6'>
                                     <div className='flex gap-3 text-gray-500'>
-                                        <Link to="#" className='p-2 bg-yellow-500 text-white rounded hover:bg-yellow-800'>
+                                        <Link to={`/dashboard/writer/${item._id}`} className='p-2 bg-yellow-500 text-white rounded hover:bg-yellow-800'>
                                             <FaEdit />
                                         </Link>
                                         <Link to="#" className='p-2 bg-red-500 text-white rounded hover:bg-red-800'>
