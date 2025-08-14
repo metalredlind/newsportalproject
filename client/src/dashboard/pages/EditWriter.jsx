@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { base_url } from '../../config/config';
+import storeContext from '../../context/storeContext';
+import toast from 'react-hot-toast';
 
 const EditWriter = () => {
 
+    const {id} = useParams();
+    const {store} = useContext(storeContext);
     const [loader, setLoader] = useState(false);
-
     const navigate = useNavigate();
 
     const [state, setState] = useState({
@@ -16,11 +21,34 @@ const EditWriter = () => {
 
     //console.log(state);
     
+
+    const getWriterData = async () => {
+        try {
+            const {data} = await axios.get(`${base_url}/api/news/writer/${id}`, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            });
+            setState({
+                name: data.writer.name,
+                email: data.writer.email,
+                category: data.writer.category,
+                role: data.writer.role
+            });
+        } catch (error) {
+            toast.error("Failed to load Writers");
+        }
+    }
+
+    useEffect(()=> {
+        getWriterData();
+    },[id]);
+
     const inputHandle = (e) => {
         setState({
             ...state,
             [e.target.name]: e.target.value
-        })
+        });
     };
 
     return (
