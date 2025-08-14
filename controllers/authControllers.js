@@ -79,7 +79,7 @@ class authController {
         } catch (error) {
             return res.status(500).json({ message: 'Internal server error' });
         }
-    }
+    };
 
     get_writers = async(req,res) => {
         try {
@@ -88,7 +88,7 @@ class authController {
         } catch (error) {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-    }
+    };
 
     getWriterById = async(req,res) => {
 
@@ -103,8 +103,36 @@ class authController {
         } catch (error) {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
+    };
+
+    update_writer = async(req,res) => {
+        const { name, email, category, role} = req.body;
+        const writerId = req.params.id;
+
+        if (!name || !email || !category) {
+            return res.status(400).json({ message:"Please fill all field data" });
+        };
+
+        try {
+            const writer = await authModel.findById(writerId);
+
+            if (!writer) {
+                return res.status(400).json({ message:"Writer not found" })
+            };
+
+            writer.name = name.trim();
+            writer.email = email.trim();
+            writer.category = category.trim();
+            writer.role = role.trim();
+
+            await writer.save();
+            return res.status(200).json({ message:"Writer updated successfully",writer });
+
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 
 }
 
-module.exports = new authController()
+module.exports = new authController();

@@ -20,7 +20,6 @@ const EditWriter = () => {
     });
 
     //console.log(state);
-    
 
     const getWriterData = async () => {
         try {
@@ -38,7 +37,7 @@ const EditWriter = () => {
         } catch (error) {
             toast.error("Failed to load Writers");
         }
-    }
+    };
 
     useEffect(()=> {
         getWriterData();
@@ -51,6 +50,24 @@ const EditWriter = () => {
         });
     };
 
+    const handleUpdateWriter = async (e) => {
+        e.preventDefault();
+        try {
+            setLoader(true);
+            const {data} = await axios.put(`${base_url}/api/update/writer/${id}`, state, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            });
+            setLoader(false);
+            toast.success(data.message);
+            navigate('/dashboard/writers');
+        } catch (error) {
+            setLoader(false);
+            toast.error(error.response.data.message);
+        }
+    };
+
     return (
         <div className='bg-white rounded-md '>
             <div className='flex justify-between p-4'>
@@ -61,7 +78,7 @@ const EditWriter = () => {
             </div>
 
             <div className='p-4'>
-                <form>
+                <form onSubmit={handleUpdateWriter}>
                     <div className='grid grid-cols-2 gap-x-8 mb-3'>
 
                         <div className='flex flex-col gap-y-2'>
