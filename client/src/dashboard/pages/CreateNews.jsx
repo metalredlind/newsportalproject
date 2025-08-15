@@ -1,10 +1,16 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaImages } from "react-icons/fa6";
 import JoditEditor from 'jodit-react';
 import Gallery from '../components/gallery';
+import { base_url } from '../../config/config';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import storeContext from '../../context/storeContext';
 
 const CreateNews = () => {
+    
+    const { store } = useContext(storeContext);
 
     const [loader, setLoader] = useState(false);
     const [show, setShow] = useState(false);
@@ -22,6 +28,27 @@ const CreateNews = () => {
             setImg(URL.createObjectURL(files[0]))
             setImage(files[0])
         }
+    };
+
+    const added = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('title',title);
+        formData.append('description',description);
+        formData.append('image',image);
+
+        try {
+            setLoader(true);
+            const {data} = await axios.post(`${base_url}/api/news/add`, formData, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            });
+            setLoader(false);
+            toast.success(data.message)
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
     }
 
     return (
@@ -31,7 +58,7 @@ const CreateNews = () => {
                 <Link className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-800 transition duration-300' to='/dashboard/news'>View All</Link>
             </div>
             
-            <form>
+            <form onSubmit={added}>
                 <div>
                     <label htmlFor="title" className='block text-md font-medium text-gray-600 mb-2'>Title</label>
                     <input value={title} onChange={ (e)=>setTitle(e.target.value) } type="text" placeholder='Enter News Type' name='title' id='title' className='w-full px-4 py-2 border rounded-md border-gray-300 focus:border-blue-500 outline-none transition h-10' />
