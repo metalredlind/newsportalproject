@@ -1,4 +1,4 @@
-const { model, Schema } = require('mongoose')
+const { model, Schema } = require('mongoose');
 
 const newsSchema = new Schema({
     writerId: {
@@ -39,7 +39,7 @@ const newsSchema = new Schema({
         default: "pending"
     },
     count: {
-        type: number,
+        type: Number,
         default: 0
     }
 },{timestamps: true});

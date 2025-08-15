@@ -14,7 +14,7 @@ const CreateNews = () => {
 
     const [loader, setLoader] = useState(false);
     const [show, setShow] = useState(false);
-    const [images, setImages] = useState([]);
+    const [images] = useState([]);
     
     const editor = useRef(null);
     const [title,setTitle] = useState('');
