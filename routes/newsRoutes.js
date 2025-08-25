@@ -4,5 +4,6 @@ const middleware = require('../middlewares/middleware');
 
 //writers route
 router.post('/api/news/add', middleware.auth, newsControllers.add_news);
+router.get('/api/images', middleware.auth, newsControllers.get_images);
 
 module.exports = router
