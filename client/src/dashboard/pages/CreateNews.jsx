@@ -90,13 +90,12 @@ const CreateNews = () => {
                 }
             });
             setImagesLoader(false);
-            setImages([...images, data.images]);
+            setImages([...images, ...data.images]);
             toast.success(data.message);
         } catch (error) {
             console.log(error);
             setImagesLoader(false);
         }
-
     }
 
 
