@@ -16,7 +16,7 @@ class newsControllers {
             api_key: process.env.api_key,
             api_secret: process.env.api_secret,
             secure: true
-        })
+        });
 
         try {
             const [ fields, files ] = await form.parse(req)
@@ -45,6 +45,34 @@ class newsControllers {
         try {
             const images = await galleryModel.find({ writerId: new ObjectId(id) }).sort({ createdAt: -1 });
             return res.status(201).json({ images });
+        } catch (error) {
+            return res.status(500).json({message: 'Internal server Error'});
+        }
+    }
+
+    add_images = async (req,res) => {
+        const { id } = req.userInfo;
+        const form = formidable({});
+
+        cloudinary.config({
+            cloud_name: process.env.cloud_name,
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret,
+            secure: true
+        });
+
+        try {
+            const [ _, files ] = await form.parse(req)
+            let allImages = []
+            const { images } = files
+
+            for (let i = 0; i < images.length; i++) {
+                const { url } = await cloudinary.uploader.upload(images[i].filepath, {folder: 'news_images'})
+                allImages.push({ writerId: id, url })
+            }
+
+            const image = await galleryModel.insertMany(allImages)
+            return res.status(201).json({ images:image, message:"Images uploaded successfully" })
         } catch (error) {
             return res.status(500).json({message: 'Internal server Error'});
         }

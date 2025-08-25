@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaImages } from "react-icons/fa6";
 import JoditEditor from 'jodit-react';
-import Gallery from '../components/gallery';
+import Gallery from '../components/Gallery';
 import { base_url } from '../../config/config';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -73,6 +73,31 @@ const CreateNews = () => {
     useEffect(() => {
         get_images()
     },[]);
+    
+    const [imagesLoader, setImagesLoader] = useState(false);
+
+    const imageHandler = async (e) => {
+        const files = e.target.files;
+        try {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('images',files[i])
+            };
+            setImagesLoader(true);
+            const {data} = await axios.post(`${base_url}/api/images/add`, formData, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            });
+            setImagesLoader(false);
+            setImages([...images, data.images]);
+            toast.success(data.message);
+        } catch (error) {
+            console.log(error);
+            setImagesLoader(false);
+        }
+
+    }
 
 
     return (
@@ -125,7 +150,7 @@ const CreateNews = () => {
             </form>
 
             { show && <Gallery setShow={setShow} images={images} /> }
-            <input type="file" multiple id='images' className='hidden' />
+            <input onChange={imageHandler} type="file" multiple id='images' className='hidden' />
 
         </div>
         
