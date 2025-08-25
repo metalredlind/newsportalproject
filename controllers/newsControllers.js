@@ -33,16 +33,21 @@ class newsControllers {
                 date: moment().format('LL'),
                 image: url
             })
-            return res.status(201).json({message: 'News Added Successfully',news})
+            return res.status(201).json({message: 'News Added Successfully',news});
             
         } catch (error) {
-              return res.status(500).json({message: 'Internal server Error'})
+            return res.status(500).json({message: 'Internal server Error'});
         } 
     }
 
     get_images = async (req, res) => {
         const {id} = req.userInfo;
-        console.log(id);
+        try {
+            const images = await galleryModel.find({ writerId: new ObjectId(id) }).sort({ createdAt: -1 });
+            return res.status(201).json({ images });
+        } catch (error) {
+            return res.status(500).json({message: 'Internal server Error'});
+        }
     }
 }
 

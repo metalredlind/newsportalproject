@@ -14,7 +14,6 @@ const CreateNews = () => {
 
     const [loader, setLoader] = useState(false);
     const [show, setShow] = useState(false);
-    const [images] = useState([]);
     
     const editor = useRef(null);
     const [title,setTitle] = useState('');
@@ -67,7 +66,7 @@ const CreateNews = () => {
             console.log(data.images);
             setImages(data.images);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
