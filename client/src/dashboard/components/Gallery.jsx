@@ -1,6 +1,14 @@
 import React from 'react';
 import { IoIosCloseCircle } from "react-icons/io";
 import { FaImages } from "react-icons/fa6";
+import copy from "copy-text-to-clipboard";
+import toast from "react-hot-toast";
+
+const copy_url = (url) => {
+    copy(url);
+    toast.success("Image url copied sucessfully");
+}
+
 
 const Gallery = ({ setShow, images }) => {
     return (
@@ -30,13 +38,11 @@ const Gallery = ({ setShow, images }) => {
                         <div className='grid grid-cols-4 gap-x-2 mt-4'>
                             {
                                 images.length > 0 && images.map((img, i)=>
-                                    <div className='cursor-pointer' key={i}>
+                                    <div className='cursor-pointer' key={i} onClick={()=>copy_url(img.url)} >
                                         <img src={img.url} alt="images" className='w-full h-[100px]' />
-                                    
                                     </div>
                                 )
                             }
-                            
                         </div>
                     </div>
                 </div>
