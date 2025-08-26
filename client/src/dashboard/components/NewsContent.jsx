@@ -77,9 +77,13 @@ const NewsContent = () => {
                                         <Link to="#" className='p-2 bg-blue-500 text-white rounded hover:bg-blue-800'>
                                             <FaEye />
                                         </Link>
-                                        <Link to="#" className='p-2 bg-yellow-500 text-white rounded hover:bg-yellow-800'>
-                                            <FaEdit />
-                                        </Link>
+                                        {
+                                            store?.userInfo?.role === 'writer' && <>
+                                            <Link to={`/dashboard/news/edit/${n._id}`} className='p-2 bg-yellow-500 text-white rounded hover:bg-yellow-800'>
+                                                <FaEdit />
+                                            </Link>
+                                            </>
+                                        }
                                         <Link to="#" className='p-2 bg-red-500 text-white rounded hover:bg-red-800'>
                                             <FaTrash />
                                         </Link>

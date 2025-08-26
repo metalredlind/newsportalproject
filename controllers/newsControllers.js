@@ -92,6 +92,17 @@ class newsControllers {
             return res.status(500).json({message: 'Internal server Error'});
         }
     }
+
+    get_edit_dashboard_news = async (req,res) => {
+        const {news_id} = req.params;
+        try {
+            const news = await newsModel.findById(news_id);
+            return res.status(200).json({news});
+        } catch (error) {
+            return res.status(500).json({message: 'Internal server Error'});
+        }
+
+    }
 }
 
 module.exports = new newsControllers()
