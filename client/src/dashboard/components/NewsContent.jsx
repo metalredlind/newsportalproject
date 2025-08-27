@@ -7,6 +7,7 @@ import storeContext from '../../context/storeContext';
 import axios from 'axios';
 import { base_url } from '../../config/config';
 import { convert } from 'html-to-text';
+import { toast } from 'react-hot-toast';
 
 const NewsContent = () => {
 
@@ -31,6 +32,23 @@ const NewsContent = () => {
     useEffect(()=>{
         get_news();
     })
+
+    const deleteNews = async (newsId) => {
+        if (window.confirm("Are you sure to delete this news?")) {
+            try {
+                const {data} = await axios.delete(`${base_url}/api/news/delete/${newsId}`, {
+                    headers: {
+                        'Authorization' : `Bearer ${store.token}`
+                    }
+                });
+                toast.success(data.message);
+                get_news();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+    }
 
     return (
         <div className='bg-gray-50 min-h-screen p-6'>
@@ -84,9 +102,9 @@ const NewsContent = () => {
                                             </Link>
                                             </>
                                         }
-                                        <Link to="#" className='p-2 bg-red-500 text-white rounded hover:bg-red-800'>
+                                        <button onClick={ ()=> deleteNews(n._id) } to="#" className='p-2 bg-red-500 text-white rounded hover:bg-red-800'>
                                             <FaTrash />
-                                        </Link>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
