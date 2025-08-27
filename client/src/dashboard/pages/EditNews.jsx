@@ -57,25 +57,23 @@ const EditNews = () => {
 
     const [images, setImages] = useState([]);
     
-    const get_images = async () => {
-        try {
-            const {data} = await axios.get(`${base_url}/api/images`, {
-                headers: {
-                    'Authorization' : `Bearer ${store.token}`
-                }
-            });
-            console.log(data.images);
-            setImages(data.images);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     useEffect(() => {
-        get_images()
-    },[]);
+        const fetchImages = async () => {
+            try {
+                const {data} = await axios.get(`${base_url}/api/images`, {
+                    headers: {
+                        'Authorization' : `Bearer ${store.token}`
+                    }
+                });
+                setImages(data.images);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchImages();
+    },[store.token]);
     
-    const [imagesLoader, setImagesLoader] = useState(false);
+    // removed unused imagesLoader state
 
     const imageHandler = async (e) => {
         const files = e.target.files;
@@ -84,41 +82,36 @@ const EditNews = () => {
             for (let i = 0; i < files.length; i++) {
                 formData.append('images',files[i])
             };
-            setImagesLoader(true);
             const {data} = await axios.post(`${base_url}/api/images/add`, formData, {
                 headers: {
                     'Authorization' : `Bearer ${store.token}`
                 }
             });
-            setImagesLoader(false);
             setImages([...images, ...data.images]);
             toast.success(data.message);
         } catch (error) {
             console.log(error);
-            setImagesLoader(false);
         }
     }
 
-    const get_edit_news = async () => {
-        try {
-            const {data} = await axios.get(`${base_url}/api/edit/news/${news_id}`, {
-                headers: {
-                    'Authorization' : `Bearer ${store.token}`
-                }
-            });
-            console.log(data.images);
-            setTitle(data?.news?.title);
-            setDescription(data?.news?.description);
-            setImg(data?.news?.image);
-            set_old_image(data?.news?.image);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     useEffect(()=>{
-        get_edit_news()
-    },[news_id])
+        const fetchEditNews = async () => {
+            try {
+                const {data} = await axios.get(`${base_url}/api/edit/news/${news_id}`, {
+                    headers: {
+                        'Authorization' : `Bearer ${store.token}`
+                    }
+                });
+                setTitle(data?.news?.title);
+                setDescription(data?.news?.description);
+                setImg(data?.news?.image);
+                set_old_image(data?.news?.image);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchEditNews();
+    },[news_id, store.token])
 
     return (
         <div className='bg-white shadow-md rounded-md p-6'>

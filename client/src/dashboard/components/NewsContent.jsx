@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import profile from '../../assets/profile.png';
+// removed unused import 'profile'
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
 import { useContext, useEffect, useState } from 'react';
@@ -13,25 +13,25 @@ const NewsContent = () => {
 
     const { store } = useContext(storeContext);
     const [news, setNews] = useState([]);
-    const [all_news, set_all_news] = useState([]);
-
-    const get_news = async () => {
-        try {
-            const {data} = await axios.get(`${base_url}/api/news`, {
-                headers: {
-                    'Authorization' : `Bearer ${store.token}`
-                }
-            });
-            set_all_news(data.news);
-            setNews(data.news);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // removed unused state 'all_news'
 
     useEffect(()=>{
-        get_news();
-    })
+        const fetchNews = async () => {
+            try {
+                const {data} = await axios.get(`${base_url}/api/news`, {
+                    headers: {
+                        'Authorization' : `Bearer ${store.token}`
+                    }
+                });
+                setNews(data.news);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchNews();
+        // run once on mount to avoid repeated GETs on each render
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const deleteNews = async (newsId) => {
         if (window.confirm("Are you sure to delete this news?")) {
@@ -42,7 +42,13 @@ const NewsContent = () => {
                     }
                 });
                 toast.success(data.message);
-                get_news();
+                // refresh list after deletion
+                const {data: refreshed} = await axios.get(`${base_url}/api/news`, {
+                    headers: {
+                        'Authorization' : `Bearer ${store.token}`
+                    }
+                });
+                setNews(refreshed.news);
             } catch (error) {
                 console.log(error);
             }
