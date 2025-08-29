@@ -63,25 +63,19 @@ const NewsContent = () => {
     },[news,perPage])
 
     const deleteNews = async (newsId) => {
-        if (window.confirm("Are you sure to delete this news?")) {
+        if (window.confirm('Are you sure to delete?')) {
             try {
-                const {data} = await axios.delete(`${base_url}/api/news/delete/${newsId}`, {
+                const { data } = await axios.delete(`${base_url}/api/news/delete/${newsId}`, {
                     headers: {
                         'Authorization' : `Bearer ${store.token}`
                     }
-                });
-                toast.success(data.message);
-                // refresh list after deletion
-                const {data: refreshed} = await axios.get(`${base_url}/api/news`, {
-                    headers: {
-                        'Authorization' : `Bearer ${store.token}`
-                    }
-                });
-                setNews(refreshed.news);
+                })   
+                toast.success(data.message)
+                get_news();
             } catch (error) {
-                console.log(error);
-            }
-        }
+                console.log(error)
+            } 
+        } 
     }
 
     const search_news = (e) => {
@@ -110,6 +104,29 @@ const NewsContent = () => {
     })
 
     const update_status = async (status,news_id) => {
+        try {
+            set_res({
+                id: news_id,
+                loader: true
+            })
+            const { data } = await axios.put(`${base_url}/api/news/status-update/${news_id}`, {status}, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            })
+            set_res({
+                id: '',
+                loader: false
+            })
+            toast.success(data.message);
+            get_news();
+        } catch (error) {
+            set_res({
+                id: '',
+                loader: false
+            });
+            console.log(error);
+        }
 
     }
 

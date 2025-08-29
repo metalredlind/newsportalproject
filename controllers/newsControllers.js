@@ -172,7 +172,19 @@ class newsControllers {
         } catch (error) {
             return res.status(500).json({ message:"Internal server error" });
         }
+    }
 
+    update_news_status = async(req,res) => {
+        const { role } = req.userInfo;
+        const { news_id } = req.params;
+        const { status } = req.body;
+
+        if (role === 'admin') {
+            const news = await newsModel.findByIdAndUpdate(news_id, {status}, {news:true});
+            return res.status(200).json({ message:"News status updated succesfully", news });
+        } else {
+            return res.status(401).json({ message:"You can't access this API" });
+        }
     }
 }
 
