@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const SimpleDetailsNewsCard = () => {
+const SimpleDetailsNewsCard = ({type}) => {
     return (
         <div className='bg-white shadow'>
             <div className='group relative overflow-hidden'>
@@ -30,6 +30,12 @@ const SimpleDetailsNewsCard = () => {
                     <span className='font-semibold'>04-09-2025</span>
                     <span className='font-semibold'>By Nami</span>
                 </div>
+                {
+                    type === 'details_news' && 
+                    <p className='text-sm text-slate-600 pt-3'>
+                        TNI melalui Komandan Satuan Siber (Dansatsiber) TNI Brigjen Juinta Omboh Sembiring berencana melaporkan influencer Ferry Irwandi ke Polda Metro Jaya..
+                    </p>
+                }
 
             </div>
             
