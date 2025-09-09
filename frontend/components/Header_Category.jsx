@@ -48,7 +48,7 @@ const Header_Category = () => {
                     <div className='flex-wrap hidden lg:flex'>
                         <Link className={`px-6 font-medium py-[13px] ${path === '/' ? 'bg-[#00000026]' : ''} `} href={'/'} > Home </Link>
                         {
-                            data.map((c,i) => <Link className={`px-6 font-medium py-[13px] ${path === c.name ? 'bg-[#00000026]' : ''} `} href={'/'}> {c.name} </Link>
+                            data.map((c,i) => <Link key={i} className={`px-6 font-medium py-[13px] ${path === c.name ? 'bg-[#00000026]' : ''} `} href={'/'}> {c.name} </Link>
                             )
                         }
                     </div>
