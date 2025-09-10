@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import HeadLines from "@/components/HeadLines";
 import DetailNewsCol from "@/components/news/DetailNewsCol";
 import DetailsNews from "@/components/news/DetailsNews";
@@ -11,7 +12,8 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="">
+    <div>
+    <main>
       <HeadLines />
       <div className="bg-slate-100">
         <div className="px-4 md:px-8 py-8">
@@ -95,8 +97,8 @@ export default function Home() {
         </div>
       </div>
 
-      <h1>Main Page</h1>
-
     </main>
+    <Footer />
+    </div>
   );
 }
