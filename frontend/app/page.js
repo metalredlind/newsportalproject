@@ -1,5 +1,8 @@
 import HeadLines from "@/components/HeadLines";
+import DetailNewsCol from "@/components/news/DetailNewsCol";
+import DetailsNews from "@/components/news/DetailsNews";
 import DetailsNewsRow from "@/components/news/DetailsNewsRow";
+import NewsCard from "@/components/news/item/NewsCard";
 import SimpleNewsCard from "@/components/news/item/SimpleNewsCard";
 import LatestNews from "@/components/news/LatestNews";
 import PopularNews from "@/components/news/PopularNews";
@@ -38,15 +41,56 @@ export default function Home() {
 
               <div className="w-full lg:w-8/12">
                 <DetailsNewsRow category="Sports" type="details_news" />
+                <DetailsNews category="Health" />
               </div>
               <div className="w-full lg:w-4/12">
-
+                <DetailNewsCol category="Education" />
               </div>
 
             </div>
           </div>
 
+          {/* second section */}
+          <div className="w-full">
+            <div className="flex flex-wrap">
 
+              <div className="w-full lg:w-4/12">
+                <div className="pl-3">
+                  <DetailNewsCol category="Politics" />
+                </div>
+              </div>
+              <div className="w-full lg:w-8/12">
+                <div className="pl-3">
+                  <DetailsNewsRow category="Travel" type="details_news" />
+                  <DetailsNews category="International" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Third section */}
+          <div className="w-full">
+            <div className="flex flex-wrap">
+
+              <div className="w-full lg:w-8/12">
+                <DetailsNewsRow category="Technology" type="details_news" />
+              </div>
+              <div className="w-full lg:w-4/12">
+                <div className="pl-3">
+                  <Title title="Recent News" />
+                  <div className="grid grid-cols-1 gap-y-[8px] mt-2">
+                    {
+                      [1,2,3].map((item,i) => <NewsCard item={item} key={i} /> )
+                    }
+
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
 
         </div>
       </div>
