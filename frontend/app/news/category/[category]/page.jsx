@@ -1,5 +1,6 @@
 import Breadcrump from '@/components/Breadcrump';
 import SimpleDetailsNewsCard from '@/components/news/item/SimpleDetailsNewsCard';
+import RecentNews from '@/components/news/RecentNews';
 import Search from '@/components/news/Search';
 import React from 'react';
 
@@ -32,6 +33,7 @@ const page = () => {
                             <div className='w-full px-0 xl:px-4'>
                                 <div className='flex flex-col gap-y-8'>
                                     <Search />
+                                    <RecentNews />
 
                                 </div>
                             </div>
