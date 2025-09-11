@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const SimpleDetailsNewsCard = ({type}) => {
+const SimpleDetailsNewsCard = ({news,type}) => {
     return (
         <div className='bg-white shadow'>
             <div className='group relative overflow-hidden'>
