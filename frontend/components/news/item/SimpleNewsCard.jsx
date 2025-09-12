@@ -7,7 +7,7 @@ const SimpleNewsCard = ({item,type}) => {
         <div className='group relative'>
             <div className='overflow-hidden'>
                 <div className={`${type ? 'h-[270px] sm:h-[470px]' : 'h-[228px]'} w-full group-hover:scale-[1.1] transition-all duration-[1s]`}>
-                    <Image className='' layout='fill' src={'https://res.cloudinary.com/dklvaehhq/image/upload/v1755266846/cld-sample-5.jpg'} alt='img' />
+                    <Image className='' fill src={item.image} alt='img' />
                 </div>
             </div>
 
@@ -18,17 +18,17 @@ const SimpleNewsCard = ({item,type}) => {
 
             <div className='left-5 absolute bottom-4 flex justify-start items-start flex-col text-white font-semibold gap-y-2'>
                 
-                <div className='px-[6px] py-[2px] rounded-md text-[13px] bg-[#c80000]'>
-                    Category
+                <div className='px-[6px] capitalize py-[2px] rounded-md text-[13px] bg-[#c80000]'>
+                    { item.category }
                 </div>
 
-                <Link href={'/'} className='text-xl'>
-                    Daftar 10 Pulau Terbaik Dunia 2025: Bali Bertengger di Posisi Ketiga
+                <Link href={`/news/${item.slug}`} className='text-xl'>
+                    { item.title }
                 </Link>
 
                 <div className='flex gap-x-2 text-sm font-medium'>
-                    <span>04-09-2025</span>
-                    <span>By Nami</span>
+                    <span>{ item.date }</span>
+                    <span>By { item.writerName }</span>
                 </div>
 
             </div>

@@ -9,7 +9,6 @@ import LatestNews from "@/components/news/LatestNews";
 import PopularNews from "@/components/news/PopularNews";
 import Title from "@/components/Title";
 import { base_api_url } from "@/config/config";
-import Image from "next/image";
 
 const Home = async() => {
 
@@ -37,9 +36,12 @@ const Home = async() => {
                 <Title title="Technology" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-[14px]">
                   {
-                    [1,2,3,4].map((item,i) => <SimpleNewsCard item={item} key={i} /> )
+                    news["technology"].map((item,i) => {
+                      if (i < 3) {
+                        return <SimpleNewsCard item={item} key={i} /> 
+                      }
+                    })
                   }
-
                 </div>
               </div>
 
@@ -53,11 +55,20 @@ const Home = async() => {
             <div className="flex flex-wrap">
 
               <div className="w-full lg:w-8/12">
-                <DetailsNewsRow category="Sports" type="details_news" />
-                <DetailsNews category="Health" />
+                <DetailsNewsRow 
+                  category="Sports" 
+                  type="details_news" 
+                  news={news["sport"]}
+                
+                />
+                <DetailsNews 
+                  category="Health" 
+                  news={news["health"]}
+                
+                />
               </div>
               <div className="w-full lg:w-4/12">
-                <DetailNewsCol category="Education" />
+                <DetailNewsCol category="Education" news={news["education"]} />
               </div>
 
             </div>
