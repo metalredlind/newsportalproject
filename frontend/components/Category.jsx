@@ -4,7 +4,7 @@ import React from 'react';
 const Category = ({titleStyle}) => {
     return (
         <div className='w-full flex flex-col gap-y-[14px]'>
-            <div className={`text-xl font-bold ${titleStyle} text-white relative before:absolute before:w-[4px] before:bg-[#5271ff] before:h-full before:-left-0 pl-3`}>
+            <div className={`text-xl font-bold ${titleStyle} relative before:absolute before:w-[4px] before:bg-[#5271ff] before:h-full before:-left-0 pl-3`}>
                 Category
             </div>
 
