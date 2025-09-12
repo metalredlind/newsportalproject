@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import HeadLines from "@/components/HeadLines";
 import DetailNewsCol from "@/components/news/DetailNewsCol";
 import DetailsNews from "@/components/news/DetailsNews";
@@ -37,7 +36,7 @@ const Home = async() => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-[14px]">
                   {
                     news["technology"].map((item,i) => {
-                      if (i < 3) {
+                      if (i < 4) {
                         return <SimpleNewsCard item={item} key={i} /> 
                       }
                     })
@@ -58,10 +57,10 @@ const Home = async() => {
                 <DetailsNewsRow 
                   category="Sports" 
                   type="details_news" 
-                  news={news["sport"]}
+                  news={news["sports"]}
                 
                 />
-                <DetailsNews 
+                <DetailsNews
                   category="Health" 
                   news={news["health"]}
                 
@@ -80,7 +79,7 @@ const Home = async() => {
 
               <div className="w-full lg:w-4/12">
                 <div className="pl-3">
-                  <DetailNewsCol category="Politics" />
+                  <DetailNewsCol category="Politics" news={news["politics"]} />
                 </div>
               </div>
               <div className="w-full lg:w-8/12">

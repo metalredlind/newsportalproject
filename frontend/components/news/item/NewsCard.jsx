@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const NewsCard = ({item}) => {
+const NewsCard = ({item }) => {
     return (
         <div className='bg-[#e5effe] shadow-md rounded-md flex p-4 hover:shadow-md transition-shadow duration-300'>
             <div className='relative flex-shrink-0 overflow-hidden rounded-md group'>
@@ -10,7 +10,7 @@ const NewsCard = ({item}) => {
                     <Image 
                         layout='fill'
                         className='object-cover rounded-md'
-                        src="https://res.cloudinary.com/dklvaehhq/image/upload/v1755266834/samples/landscapes/architecture-signs.jpg"
+                        src={ item?.image }
                         alt='Image'
                     />
 
@@ -23,15 +23,15 @@ const NewsCard = ({item}) => {
 
             <div className='flex flex-col justify-between pl-4 w-full'>
 
-                <Link href={`/`} className='text-xs font-semibold text-blue-600 hover:underline'>
-                Category Name
+                <Link href={`/news/category/${item?.category}`} className='text-xs font-semibold text-blue-600 hover:underline'>
+                { item?.category }
                 </Link>
-                <Link href={`/`} className='text-base font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-30'>
-                Prabowo Reshuffle Lima Menteri, Ini Daftarnya
+                <Link href={`/news/${item?.slug}`} className='text-base font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-30'>
+                { item?.title }
                 </Link>
                 <div className='flex gap-x-3 text-xs text-gray-500'>
-                    <span className='font-semibold'>09-09-2025</span>
-                    <span className='font-semibold'>By Nami</span>
+                    <span className='font-semibold'>{ item?.date }</span>
+                    <span className='font-semibold'>By { item?.writerName }</span>
 
                 </div>
 
