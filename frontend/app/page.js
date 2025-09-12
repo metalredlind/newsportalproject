@@ -8,9 +8,20 @@ import SimpleNewsCard from "@/components/news/item/SimpleNewsCard";
 import LatestNews from "@/components/news/LatestNews";
 import PopularNews from "@/components/news/PopularNews";
 import Title from "@/components/Title";
+import { base_api_url } from "@/config/config";
 import Image from "next/image";
 
-export default function Home() {
+const Home = async() => {
+
+  const news_data = await fetch(`${base_api_url}/api/all/news`, {
+    next: {
+      revalidate: 5
+    }
+  });
+
+  let news = await news_data?.json();
+  news = news.news;
+
   return (
     <div>
     <main>
@@ -101,3 +112,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;

@@ -14,4 +14,7 @@ router.put('/api/news/update/:news_id', middleware.auth, newsControllers.update_
 router.delete('/api/news/delete/:news_id', middleware.auth, newsControllers.delete_news);
 router.put('/api/news/status-update/:news_id', middleware.auth, newsControllers.update_news_status);
 
+//Frontend api all
+router.get('/api/all/news', newsControllers.get_all_news);
+
 module.exports = router
