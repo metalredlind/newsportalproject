@@ -35,7 +35,7 @@ const Home = async() => {
                 <Title title="Technology" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-[14px]">
                   {
-                    news["technology"].map((item,i) => {
+                    news['technology'].map((item,i) => {
                       if (i < 4) {
                         return <SimpleNewsCard item={item} key={i} /> 
                       }
@@ -58,18 +58,15 @@ const Home = async() => {
                   category="Sports" 
                   type="details_news" 
                   news={news["sports"]}
-                
                 />
                 <DetailsNews
                   category="Health" 
                   news={news["health"]}
-                
                 />
               </div>
               <div className="w-full lg:w-4/12">
                 <DetailNewsCol category="Education" news={news["education"]} />
               </div>
-
             </div>
           </div>
 
@@ -79,13 +76,13 @@ const Home = async() => {
 
               <div className="w-full lg:w-4/12">
                 <div className="pl-3">
-                  <DetailNewsCol category="Politics" news={news["politics"]} />
+                  <DetailNewsCol category="Travel" news={news["travel"]} />
                 </div>
               </div>
               <div className="w-full lg:w-8/12">
                 <div className="pl-3">
-                  <DetailsNewsRow category="Travel" type="details_news" />
-                  <DetailsNews category="International" />
+                  <DetailsNewsRow category="Business" type="details_news" news={news["business"]} />
+                  <DetailsNews category="International" news={news["international"]}/>
                 </div>
               </div>
 
@@ -97,14 +94,14 @@ const Home = async() => {
             <div className="flex flex-wrap">
 
               <div className="w-full lg:w-8/12">
-                <DetailsNewsRow category="Technology" type="details_news" />
+                <DetailsNewsRow category="Technology" type="details_news" news={news["technology"]} />
               </div>
               <div className="w-full lg:w-4/12">
                 <div className="pl-3">
                   <Title title="Recent News" />
                   <div className="grid grid-cols-1 gap-y-[8px] mt-2">
                     {
-                      [1,2,3].map((item,i) => <NewsCard item={item} key={i} /> )
+                      news['sports'].map((item,i) => <NewsCard item={item} key={i} /> )
                     }
 
                   </div>

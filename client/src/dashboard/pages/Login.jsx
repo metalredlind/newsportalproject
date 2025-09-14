@@ -50,7 +50,7 @@ const Login = () => {
             <div className='bg-white shadow-lg rounded-lg w-[400px]'>
                 <div className='p-8'>
                     <div className='flex justify-center mb-8'>
-                        <img className='w-[150px]' src="https://imgur.com/7mbwgYz.jpg" alt="logo" />
+                        <img className='w-[150px]' src="https://res.cloudinary.com/dklvaehhq/image/upload/v1757697284/mainlogo_efaxox.png" alt="logo" />
 
                     </div>
                     <form onSubmit={submit} className='space-y-6'>

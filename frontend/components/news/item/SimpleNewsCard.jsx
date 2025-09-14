@@ -3,11 +3,13 @@ import React from 'react';
 import Link from 'next/link';
 
 const SimpleNewsCard = ({item,type}) => {
+    //console.log('news object:', news);
+    //console.log('technology property:', news?.technology);
     return (
         <div className='group relative'>
             <div className='overflow-hidden'>
                 <div className={`${type ? 'h-[270px] sm:h-[470px]' : 'h-[228px]'} w-full group-hover:scale-[1.1] transition-all duration-[1s]`}>
-                    <Image className='' fill src={item.image} alt='img' />
+                    <Image className='' fill={true} src={item.image} alt='img' />
                 </div>
             </div>
 
