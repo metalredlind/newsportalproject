@@ -351,6 +351,15 @@ class newsControllers {
         }
     }
 
+    get_popular_news = async(req,res) => {
+        try {
+            const popularNews = await newsModel.find({ status: 'active' }).sort({count: -1}).limit(4);
+            return res.status(200).json({popularNews});
+        } catch (error) {
+            return res.status(500).json({ message:"Internal server error" });
+        }
+    }
+
 }
 
 module.exports = new newsControllers()
