@@ -1,7 +1,7 @@
 import Breadcrump from '@/components/Breadcrump';
 import Category from '@/components/Category';
-import PopularNews from '@/components/news/PopularNews';
 import RecentNews from '@/components/news/RecentNews';
+import RelatedNews from '@/components/news/RelatedNews';
 import Search from '@/components/news/Search';
 import { base_api_url } from '@/config/config';
 import React from 'react';
@@ -9,13 +9,21 @@ import HtmlParser from 'react-html-parser';
 
 const Details = async ({ params }) => {
 
-    const { slug } = params;
+    const { slug } = await params;
 
-    const res = await fetch(`${base_api_url}/api/news/details/${slug}`, {
+    // Decode the URL slug to handle special characters
+    const decodedSlug = decodeURIComponent(slug);
+
+    const res = await fetch(`${base_api_url}/api/news/details/${decodedSlug}`, {
         next: {
             revalidate: 1
         }
     })
+
+    // error handling for failed requests
+    if (!res.ok) {
+        throw new Error(`Failed to fetch news: ${res.status}`);
+    }
 
     const {news, relatedNews} = await res.json();
 
@@ -42,9 +50,7 @@ const Details = async ({ params }) => {
                                             <span className="font-bold">{news?.date}</span>
                                             <span className="font-bold">by {news?.writerName}</span>
                                         </div>
-                                        <p>
                                             {HtmlParser(news?.description)}
-                                        </p>
                                     </div>
 
                                 </div>
@@ -69,7 +75,7 @@ const Details = async ({ params }) => {
 
                     
                     <div className='pt-8'>
-                        <PopularNews />
+                        <RelatedNews news={relatedNews} type="Related News" />
                     </div>
 
                 </div>

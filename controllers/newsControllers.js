@@ -7,6 +7,23 @@ const galleryModel = require('../models/galleryModel')
 
 class newsControllers {
 
+    // Helper function to create clean slugs
+    createSlug = (title) => {
+        return title
+            .toLowerCase()
+            .trim()
+            // Remove special characters except spaces and hyphens
+            .replace(/[^a-z0-9\s-]/g, '')
+            // Replace multiple spaces with single space
+            .replace(/\s+/g, ' ')
+            // Replace spaces with hyphens
+            .replace(/\s/g, '-')
+            // Remove multiple consecutive hyphens
+            .replace(/-+/g, '-')
+            // Remove leading/trailing hyphens
+            .replace(/^-+|-+$/g, '');
+    }
+
     add_news = async (req,res) => {
         const { id, name, category } = req.userInfo
         const form = formidable({})
@@ -27,7 +44,7 @@ class newsControllers {
                 writerId: id,
                 writerName: name,
                 title: title[0].trim(), 
-                slug: title[0].trim().split(' ').join('-'),
+                slug: this.createSlug(title[0]), // Use the helper function
                 category, 
                 description: description[0],
                 date: moment().format('LL'),
@@ -129,7 +146,7 @@ class newsControllers {
 
             const news = await newsModel.findByIdAndUpdate(news_id, {
                 title: title[0].trim(), 
-                slug: title[0].trim().split(' ').join('-'),
+                slug: this.createSlug(title[0]), // Use the helper function
                 description: description[0],
                 image: url
             },{ new:true })
@@ -186,7 +203,6 @@ class newsControllers {
             return res.status(401).json({ message:"You can't access this API" });
         }
     }
-
 
     get_all_news = async(req,res) => {
         try {
@@ -263,31 +279,52 @@ class newsControllers {
     }
 
     get_details_news = async(req,res) => {
-        const { slug } = req.params;
+        let { slug } = req.params;
         
         try {
-            const news = await newsModel.findOneAndUpdate({slug}, {
-                $inc: { count:1 }
-            }, { new: true })
-
+            //console.log('Received slug:', slug);
+            
+            const news = await newsModel.findOneAndUpdate(
+                { slug }, 
+                {
+                    $inc: { count: 1 }
+                }, 
+                { new: true }
+            );
+            
+            // If news not found, return 404
+            if (!news) {
+                return res.status(404).json({ 
+                    message: "News not found",
+                    slug: slug 
+                });
+            }
+            
             const relatedNews = await newsModel.find({
                 $and: [
                     {
                         slug: {
                             $ne: slug
                         }
-                    }, 
+                    },
                     {
                         category: {
                             $eq: news.category
                         }
                     }
                 ]
-            }).limit(4).sort({ createdAt: -1 })
-
-            return res.status(200).json({ news: news ? news: {}, relatedNews })
+            }).limit(4).sort({ createdAt: -1 });
+            
+            return res.status(200).json({ 
+                news: news, 
+                relatedNews 
+            });
         } catch (error) {
-            return res.status(500).json({ message:"Internal server error" });
+            console.error('Error in get_details_news:', error);
+            
+            return res.status(500).json({ 
+                message: "Internal server error" 
+            });
         }
     }
 

@@ -7,7 +7,7 @@ const Breadcrump = ({one,two}) => {
             <ol className='inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse'>
 
                 <li className='inline-flex items-center'>
-                    <Link href={'/'} className='inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800'>
+                    <Link href={'/'} className='inline-flex capitalize items-center text-sm font-medium text-blue-600 hover:text-blue-800'>
                      <svg
                         className="w-3 h-3 me-2.5"
                         aria-hidden="true"
@@ -35,7 +35,7 @@ const Breadcrump = ({one,two}) => {
                             d="m1 9 4-4-4-4"
                         />
                     </svg>
-                    <span href="#" className='ms-1 text-sm font-medium text-blue-600 hover:text-blue-800'>{ one }</span>
+                    <span href="#" className='ms-1 text-sm capitalize font-medium text-blue-600 hover:text-blue-800'>{ one }</span>
                 </li>
                 <li aria-current="page">
                     <div className='flex items-center'>
@@ -54,7 +54,7 @@ const Breadcrump = ({one,two}) => {
                                 d="m1 9 4-4-4-4"
                             />
                         </svg>
-                        <span href="#" className='ms-1 text-sm font-medium text-blue-600 hover:text-blue-800'>{ two }</span>
+                        <span href="#" className='ms-1 text-sm capitalize font-medium text-blue-600 hover:text-blue-800'>{ two }</span>
                     </div>
                     
                     
