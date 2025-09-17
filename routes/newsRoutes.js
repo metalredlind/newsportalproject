@@ -16,5 +16,6 @@ router.put('/api/news/status-update/:news_id', middleware.auth, newsControllers.
 
 //Frontend api all
 router.get('/api/all/news', newsControllers.get_all_news);
+router.get('/api/category/all', newsControllers.get_categories);
 
 module.exports = router

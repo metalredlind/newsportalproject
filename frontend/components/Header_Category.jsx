@@ -1,14 +1,31 @@
 'use client'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdList, IoMdCloseCircle } from "react-icons/io";
 import { FaSearch } from "react-icons/fa";
+import { base_api_url } from '@/config/config';
 
 const Header_Category = () => {
 
-    const path = usePathname();
+    const [ categories,setCategories ] = useState([]);
 
+    const get_categories = async () => {
+        try {
+            const res = await fetch(`${base_api_url}/api/category/all`);
+            const data = await res.json();
+            setCategories(data.categories);
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        get_categories();
+    },[])
+
+    const path = usePathname();
     const data = [
         {
             id:1,
