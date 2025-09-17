@@ -1,17 +1,29 @@
 import Breadcrump from '@/components/Breadcrump';
 import Category from '@/components/Category';
-import SimpleDetailsNewsCard from '@/components/news/item/SimpleDetailsNewsCard';
 import PopularNews from '@/components/news/PopularNews';
 import RecentNews from '@/components/news/RecentNews';
 import Search from '@/components/news/Search';
+import { base_api_url } from '@/config/config';
 import React from 'react';
+import HtmlParser from 'react-html-parser';
 
-const page = () => {
+const Details = async ({ params }) => {
+
+    const { slug } = params;
+
+    const res = await fetch(`${base_api_url}/api/news/details/${slug}`, {
+        next: {
+            revalidate: 1
+        }
+    })
+
+    const {news, relatedNews} = await res.json();
+
     return (
         <div>
             <div className='bg-white shadow-md py-4'>
                 <div className='px-4 md:px-8 w-full'>
-                    <Breadcrump one="Sports" two="Daftar 10 Pulau Terbaik Dunia" />
+                    <Breadcrump one={news?.category} two={news?.title} />
                 </div>
             </div>
 
@@ -22,30 +34,16 @@ const page = () => {
                         <div className='w-full xl:w-8/12'>
                             <div className='w-full pr-0 xl:pr-4'>
                                 <div className='flex flex-col gap-y-5 bg-white'>
-                                    <img src={'https://res.cloudinary.com/dklvaehhq/image/upload/v1755266846/cld-sample.jpg'} alt="" />
+                                    <img src={news?.image} alt="" />
                                     <div className='flex flex-col gap-y-4 px-6 pb-6'>
-                                        <h3 className='text-red-700 uppercase font-medium text-xl'>Category Name</h3>
-                                        <h2 className='text-3xl text-gray-700 font-bold'>Kakak-Adik Bos Sritex jadi Tersangka Pencucian Uang</h2>
+                                        <h3 className='text-red-700 uppercase font-medium text-xl'>{news?.category}</h3>
+                                        <h2 className='text-3xl text-gray-700 font-bold'>{news?.title}</h2>
                                         <div className='flex gap-x-2 text-xs font-normal text-slate-600'>
-                                            <span className="font-bold">12-09-2025</span>
-                                            <span className="font-bold">by Nami</span>
+                                            <span className="font-bold">{news?.date}</span>
+                                            <span className="font-bold">by {news?.writerName}</span>
                                         </div>
                                         <p>
-                                        Kejaksaan Agung (Kejagung) menetapkan bos PT Sritex Tbk, Iwan Setiawan Lukminto (ISL) serta Iwan Kurniawan Lukminto (IKL), sebagai tersangka dugaan tindak pidana pencucian uang (TPPU). Keduanya sebelumnya dijerat dalam kasus dugaan korupsi pemberian kredit bank ke PT Sritex Tbk.
-
-                                        "Memang terkait penanganan perkara Sritex, terhadap inisial IKL dan ISL sudah ditetapkan, dikenakan pasal TPPU-nya per 1 September oleh penyidik," ujar Kapuspenkum Kejagung Anang Supriatna di Gedung Kejagung, Jakarta, Jumat, 12 September 2025.
-
-                                        Diketahui, Kejagung lebih dulu menetapkan Iwan Setiawan sebagai tersangka dugaan korupsi penyalahgunaan dana kredit dari bank milik negara. Iwan diduga menggunakan dana pencairan kredit untuk membayar utang dan membeli aset.
-
-                                        Padahal, dana tersebut diberikan oleh bank untuk modal kerja. Kala itu, Iwan Setiawan menjabat Direktur Utama Sritex.
-
-                                        Baca Juga: Kuasa Hukum Dirut Sritex Sebut Uang Rp2 M yang Disita Kejagung untuk Pendidikan Anak
-
-                                        Sementara, Iwan Kurniawan ketika itu menjabat Wakil Direktur Utama Sritex. Iwan diduga menandatangani permohonan pemberian kredit modal kerja dan investasi kepada salah satu bank milik daerah pada 2019.
-
-                                        Iwan turut diduga menandatangani akta perjanjian pemberian kredit kepada bank lain pada 2020. Padahal Iwan mengetahui kredit yang diberikan itu tidak digunakan sesuai peruntukan.
-
-                                        Kejagung sudah menetapkan 12 orang tersangka dalam dugaan korupsi ini . Perbuatan para tersangka diduga menyebabkan kerugian negara mencapai Rp 1,08 triliun.
+                                            {HtmlParser(news?.description)}
                                         </p>
                                     </div>
 
@@ -81,4 +79,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Details;
