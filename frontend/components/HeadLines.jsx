@@ -20,13 +20,21 @@ const HeadLines = ({news}) => {
                     <Marquee>
                         {
                             Object.keys(news).length > 0 && 
-                            Object.keys(news).map((c,i) => <>
-                                {
-                                    news[c].length > 0 && news[c].map((n,i) => <Link key={i} className='py-3 font-semibold hover:text-[#c80000] pr-12 text-sm' href={`/news/${n.slug}`}>
-                                    {n.title}
-                                    </Link>)
-                                }
-                            </>)
+                            Object.keys(news).map((categoryKey, categoryIndex) => (
+                                <React.Fragment key={categoryKey}>
+                                    {
+                                        news[categoryKey].length > 0 && news[categoryKey].map((newsItem, newsIndex) => (
+                                            <Link 
+                                                key={newsItem.slug || newsItem.id || newsIndex} 
+                                                className='py-3 font-semibold hover:text-[#c80000] pr-12 text-sm' 
+                                                href={`/news/${newsItem.slug}`}
+                                            >
+                                                {newsItem.title}
+                                            </Link>
+                                        ))
+                                    }
+                                </React.Fragment>
+                            ))
                         }
                     </Marquee>
                 </div>

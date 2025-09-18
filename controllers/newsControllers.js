@@ -378,6 +378,32 @@ class newsControllers {
         }
     }
 
+    get_images_news = async(req,res) => {
+        try {
+            const images = await newsModel.aggregate([
+                {
+                    $match: {
+                        status: 'active'
+                    }
+                },
+                {
+                    $sample: {
+                        size: 9
+                    }
+                },
+                {
+                    $project: {
+                        image: 1
+                    }
+                }
+            ])
+
+            return res.status(200).json({ images });
+        } catch (error) {
+            return res.status(500).json({ message:"Internal server error" });
+        }
+    }
+
 }
 
 module.exports = new newsControllers()
