@@ -2,13 +2,14 @@
 import { base_api_url } from '@/config/config';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import SimpleDetailsNewsCard from './item/SimpleDetailsNewsCard';
 
 const SearchNews = () => {
 
     const [news,setNews] = useState([]);
     const searchValue = useSearchParams();
     const value = searchValue.get('value');
-    
+
     const get_news = async () => {
         if (!value) return;
         try {
@@ -25,8 +26,16 @@ const SearchNews = () => {
     },[value])
 
     return (
-        <div>
-            Search result
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+            {
+                news && news.length > 0 ? (
+                    news.map((item,i) => (
+                        <SimpleDetailsNewsCard news={item} key={i} type="details_news" height={200} />
+                    ))
+                ) : (
+                    <p>No news found</p>
+                )
+            }
         </div>
     );
 };

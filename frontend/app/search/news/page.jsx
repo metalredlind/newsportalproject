@@ -22,9 +22,7 @@ const page = () => {
 
                         <div className='w-full xl:w-8/12'>
                             <div className='w-full pr-0 xl:pr-4'>
-                                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
-                                    <SearchNews />
-                                </div>
+                                <SearchNews />
                             </div>
                         </div>
 
