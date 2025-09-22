@@ -1,8 +1,10 @@
-import React from 'react';
-import { useContext } from 'react';
+import { React, useContext, useState, useEffect} from 'react';
 import { FaImage } from "react-icons/fa";
 import storeContext from './../../context/storeContext';
-import { useState } from 'react';
+import { base_url } from '../../config/config';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
 
 const Profile = () => {
 
@@ -13,23 +15,99 @@ const Profile = () => {
     const [ message,setMessage ] = useState("");
     const [ imageUrl,setImageUrl ] = useState(""); //current image
 
+    useEffect(()=>{
+        const fetchProfile = async () => {
+            try {
+                const response = await axios.get(`${base_url}/api/profile/${store.userInfo.id}`, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+                });
+                const { name,email,image }  = response.data.user;
+                setName(name);
+                setEmail(email);
+                setImageUrl(image);
+            } catch (error) {
+                setMessage("Failed to load profile data");
+            }
+        }
+
+        fetchProfile();
+    },[store.userInfo.id, store.token, setName, setEmail])
+
+    const handleFileChange = (e) => {
+        setImage(e.target.files[0])
+    }
+
+    //handle profile update
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('name',name);
+        formData.append('email',email);
+        if (image) {
+            formData.append('image',image);
+        }
+
+        try {
+            const response = await axios.put(`${base_url}/api/update-profile/${store.userInfo.id}`, formData, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setMessage("Profile update successfully");
+            toast.success(response.data.message);
+            setImageUrl(response.data.updatedUser.image);
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || "Failed to update profile";
+            setMessage(errorMsg);
+            toast.error(errorMsg);
+        }
+    }
+
     return (
         <div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-2 mt-5'>
 
             <div className='bg-white p-6 rounded-lg flex items-center shadow-md'>
-                <div className='flex-shrink-0'>
-                    {
-                        imageUrl ? (
-                            <img src={imageUrl} alt="profile pic" className='w-[150px] h-[150px] rounded-full object-cover' />
+
+                <div className='flex-shrink-0'>          {/* existing wrapper */}
+                    {/* NEW hover-aware label */}
+                    <label
+                        htmlFor="img"
+                        className="relative block w-[150px] h-[150px] rounded-full overflow-hidden cursor-pointer group"
+                    >
+                        {/* preview or placeholder */}
+                        {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt="profile pic"
+                            className="w-full h-full object-cover"
+                        />
                         ) : (
-                            <label htmlFor="img" className='w-[150px] h-[150px] flex flex-col justify-center items-center rounded-full bg-gray-200 border-2 border-dashed border-gray-300 text-gray-600 cursor-pointer hover:bg-gray-200 transition duration-300'>
-                                <FaImage className='text-4xl' />
-                                <span className='mt-2'>Select Image</span>
-                            </label>
-                        )
-                    }
-                    
-                    <input type="file" id='img' className='hidden' />
+                        <div className="w-full h-full flex flex-col justify-center items-center rounded-full bg-gray-200 border-2 border-dashed border-gray-300 text-gray-600">
+                            <FaImage className="text-4xl" />
+                            <span className="mt-2 text-sm">Select Image</span>
+                        </div>
+                        )}
+
+                        {/* hover overlay */}
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="text-white text-center">
+                            <FaImage className="text-2xl mx-auto mb-1" />
+                            <span className="text-xs">Change</span>
+                        </div>
+                        </div>
+                    </label>
+
+                    {/* hidden file input */}
+                    <input
+                        id="img"
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileChange}
+                    />
                 </div>
                 <div className='ml-6 text-gray-700 flex flex-col space-y-2'>
 
@@ -38,6 +116,15 @@ const Profile = () => {
                     <label htmlFor="email" className='text-md font-medium text-gray-600'>Email: </label>
                     <input type="text" value={email} onChange={ (e)=>setEmail(e.target.value) } className='text-xl font-semibold' placeholder='Email' />
                     <p className='text-gray-600 text-xl font-bold '>Category: <span className='text-gray-600 text-xl font-bold'>{store.userInfo?.category}</span></p>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className='mt-6'>
+                            <button type='submit' className='w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-800 transition duration-300'>Update Profile</button>
+
+                        </div>
+                    </form>
+                    { message && <p className='text-center mt-4'>{message}</p> }
+
                 </div>
             </div>
 

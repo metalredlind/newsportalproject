@@ -1,6 +1,8 @@
 const authModel = require('../models/authModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {formidable} = require('formidable');
+const cloudinary = require('cloudinary').v2;
 
 class authController {
 
@@ -145,8 +147,68 @@ class authController {
         } catch (error) {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-
     };
+
+    update_profile = async(req,res) => {
+        const form = formidable({ multiples:true }); //parse form data, including images
+
+        cloudinary.config({
+            cloud_name: process.env.cloud_name,
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret,
+            secure: true
+        });
+
+        form.parse(req, async(err, fields, files) => {
+            if (err) {
+                console.log('Formidable error',err);
+                return res.status(400).json({ message:"Image upload failed",error:err });
+            }
+
+            try {
+                const name = Array.isArray(fields.name) ? fields.name[0] : fields.name;
+                const email = Array.isArray(fields.email) ? fields.email[0] : fields.email;
+
+                if (!name || !email) {
+                    return res.status(400).json({ message:"Missing required fields" });
+                }
+
+                let updateData = {
+                    name: name.trim(),
+                    email: email.trim()
+                }
+
+                //check if image is uploaded
+                const uploadedImage = Array.isArray(files.image) ? files.image[0] : files.image;
+                if (uploadedImage && uploadedImage.filepath) {
+                    const { url } = await cloudinary.uploader.upload(uploadedImage.filepath, {folder:'news_images'});
+                    updateData.image = url;
+                } else {
+                    console.log("No Image Uploaded");
+                }
+
+                const updatedUser = await authModel.findByIdAndUpdate(req.params.id, updateData,{new:true});
+
+                return res.status(200).json({ message:"Profile has been updated successfully",updatedUser })
+            } catch (error) {
+                return res.status(500).json({ message: 'Internal Server Error' });
+            }
+        } )
+    }
+
+    get_profile = async(req,res) => {
+        try {
+            const userId = req.params.id;
+            if (!userId) {
+                return res.status(400).json({ message:"User ID is required" });
+            }
+
+            const user = await authModel.findById(userId);
+            return res.status(200).json({ user });
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    }
 
 }
 

@@ -24,7 +24,7 @@ class middleware {
 
     role = async(req, res, next) => {
         const { userInfo } = req
-        if (userInfo.role === 'admin') {
+        if (userInfo.role === 'admin' || userInfo.role === 'writer') {
             next()
         } else {
             return res.status(401).json({ message: 'Unabled to access this api' })
