@@ -31,8 +31,9 @@ router.get('/api/recent/news', newsControllers.get_recent_news);
 //get images news
 router.get('/api/images/news', newsControllers.get_images_news);
 
-
-//get images news
+//get news search
 router.get('/api/search/news', newsControllers.news_search);
+//get news stats
+router.get('/api/news-statistics', newsControllers.news_statistics);
 
 module.exports = router
