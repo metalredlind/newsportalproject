@@ -15,6 +15,10 @@ const Profile = () => {
     const [ message,setMessage ] = useState("");
     const [ imageUrl,setImageUrl ] = useState(""); //current image
 
+    const [ oldPassword,setOldPassword ] = useState("");
+    const [ newPassword,setNewPassword ] = useState("");
+    const [ passwordError,setPasswordError ] = useState("");
+
     useEffect(()=>{
         const fetchProfile = async () => {
             try {
@@ -67,18 +71,45 @@ const Profile = () => {
         }
     }
 
+    //handle password update
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        //Validate input field
+        if (!oldPassword || !newPassword) {
+            setPasswordError("Please fill in both password field");
+            return;
+        }
+        if (newPassword.length < 6) {
+            setPasswordError("New password must be minimum 6 character long");
+            return;
+        }
+
+        try {
+            const response = await axios.post(`${base_url}/api/change-password`, { oldPassword,newPassword }, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            });
+            toast.success("Password Updated Successfully");
+            setOldPassword('');
+            setNewPassword('');
+            setPasswordError('');
+        } catch (error) {
+            toast.error(error.response.data.message);
+            setPasswordError("Failed to Update Password");
+        }
+    }
+
     return (
         <div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-2 mt-5'>
 
             <div className='bg-white p-6 rounded-lg flex items-center shadow-md'>
 
-                <div className='flex-shrink-0'>          {/* existing wrapper */}
-                    {/* NEW hover-aware label */}
+                <div className='flex-shrink-0'>
                     <label
                         htmlFor="img"
                         className="relative block w-[150px] h-[150px] rounded-full overflow-hidden cursor-pointer group"
                     >
-                        {/* preview or placeholder */}
                         {imageUrl ? (
                         <img
                             src={imageUrl}
@@ -130,23 +161,22 @@ const Profile = () => {
 
             <div className='bg-white p-6 rounded-lg shadow-md text-gray-700'>
                 <h2 className='text-lg font-bold text-center mb-5'>Change Password</h2>
-                <form>
+                <form onSubmit={handlePasswordChange}>
                     <div className='space-y-4'>
                         <div>
                             <label htmlFor="old_password" className='block text-md font-semibold text-gray-600 '>Old Password</label>
-                            <input type="password" id='old_password' name='old_password' placeholder='Enter Old Password' className='w-full px-3 py-2 mt-2 border border-gray-400 rounded-md focus:ring-2 focus:ring-blue-500 outline-none transition duration-300' />
+                            <input type="password" id='old_password' name='old_password' value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} placeholder='Enter Old Password' className='w-full px-3 py-2 mt-2 border border-gray-400 rounded-md focus:ring-2 focus:ring-blue-500 outline-none transition duration-300' />
                         </div>
                         <div>
                             <label htmlFor="new_password" className='block text-md font-semibold text-gray-600 '>New Password</label>
-                            <input type="password" id='new_password' name='new_password' placeholder='Enter New Password' className='w-full px-3 py-2 mt-2 border border-gray-400 rounded-md focus:ring-2 focus:ring-blue-500 outline-none transition duration-300' />
+                            <input type="password" id='new_password' name='new_password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder='Enter New Password' className='w-full px-3 py-2 mt-2 border border-gray-400 rounded-md focus:ring-2 focus:ring-blue-500 outline-none transition duration-300' />
                         </div>
                     </div>
-
+                    { passwordError && <p className='text-center mt-4'>{passwordError}</p> }
                     <div className='mt-6'>
                         <button type='submit' className='w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-800 transition duration-300'>
                             Change Password
                         </button>
-
                     </div>
                 </form>
             </div>

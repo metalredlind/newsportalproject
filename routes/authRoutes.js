@@ -15,5 +15,7 @@ router.put('/api/update-profile/:id', middleware.auth, middleware.role, authCont
 
 router.get('/api/profile/:id', middleware.auth, middleware.role, authController.get_profile);
 
+router.post('/api/change-password', middleware.auth, authController.change_password);
+
 
 module.exports = router
