@@ -1,12 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEye } from "react-icons/fa";
-import news from '../../assets/2687464690.jpg';
 import axios from 'axios';
 import { base_url } from '../../config/config';
+import storeContext from '../../context/storeContext';
 
 
 const Adminindex = () => {
+
+    const { store } = useContext(storeContext)
+
+    const [news,setNews] = useState([]) 
+
+    const get_news = async () => {
+        try {
+            const { data } = await axios.get(`${base_url}/api/news`, {
+                headers: {
+                    'Authorization' : `Bearer ${store.token}`
+                }
+            })    
+            setNews(data.news)
+        } catch (error) {
+            console.log(error)
+        }
+    } 
+
+
+
+
+
+    useEffect(() => {
+        get_news()
+    },[])
+
+
 
     const [ start,setStart ] = useState({
         totalNews: 0,
@@ -67,25 +94,35 @@ const Adminindex = () => {
                                 <th className='py-4 px-6 text-left'>Title</th>
                                 <th className='py-4 px-6 text-left'>Image</th>
                                 <th className='py-4 px-6 text-left'>Category</th>
-                                <th className='py-4 px-6 text-left'>Description</th>
                                 <th className='py-4 px-6 text-left'>Date</th>
                                 <th className='py-4 px-6 text-left'>Status</th>
                                 <th className='py-4 px-6 text-left'>Action</th>
                             </tr>
                         </thead>
                         <tbody className='text-gray-600'>
-                            {[1,2,3].map((item, index) => (
+                        
+                            {news.slice(0, 5).map((n,index) => (
                                 <tr key={index} className='border-t'>
-                                    <td className='py-4 px-6'>1</td>
-                                    <td className='py-4 px-6'>News Title</td>
+                                    <td className='py-4 px-6'>{index+1}</td>
+                                    <td className='py-4 px-6'>{ n.title.slice(0,15) }...</td>
                                     <td className='py-4 px-6'>
-                                        <img src={news} alt="news post" className='w-10 h-10 rounded-full object-cover' />
+                                        <img src={ n.image } alt="news post" className='w-10 h-10 rounded-full object-cover' />
                                     </td>
-                                    <td className='py-4 px-6'>Category Name</td>
-                                    <td className='py-4 px-6'>Descriptions</td>
-                                    <td className='py-4 px-6'>30-07-2025</td>
+                                    <td className='py-4 px-6 capitalize'>{ n.category }</td> 
+                                    <td className='py-4 px-6'>{ n.date }</td>
                                     <td className='py-4 px-6'>
-                                        <span className='px-3 py-1 bg-green-200 rounded-full text-xs font-semibold'>Active</span>
+                                        {
+                                            n.status === 'pending' && <span className='px-2 py-[2px] bg-blue-200 text-blue-800 rounded-md text-xs'>{n.status} 
+                                            </span>
+                                        }
+                                        {
+                                            n.status === 'active' && <span className='px-2 py-[2px] bg-green-200 text-green-800 rounded-md text-xs'>{n.status} 
+                                            </span>
+                                        }
+                                        {
+                                            n.status === 'deactive' && <span className='px-2 py-[2px] bg-red-200 text-red-800 rounded-md text-xs'>{n.status} 
+                                            </span>
+                                        }
                                     </td>
                                     <td className='py-4 px-6'>
                                         <div className='flex gap-3 text-gray-500'>
