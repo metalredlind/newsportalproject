@@ -132,125 +132,245 @@ const NewsContent = () => {
 
     return (
         <div className='bg-gray-50 min-h-screen p-6'>
-            <div className='flex items-center gap-4 mb-6'>
-                <select onChange={type_filter} name="status" className='w-48 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-400'>
-                    <option value="">---Select Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="active">Active</option>
-                    <option value="deactive">Deactive</option>
-                </select>
-                <input onChange={search_news} type="text" placeholder='Search News' className='w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none' />
+            {/* Header Section */}
+            <div className='mb-8'>
+                <h1 className='text-3xl font-bold text-gray-900 mb-6'>News Management</h1>
+                
+                {/* Filters and Search */}
+                <div className='flex flex-col sm:flex-row gap-4 mb-6'>
+                    <div className='flex-1'>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>Search News</label>
+                        <input 
+                            onChange={search_news} 
+                            type="text" 
+                            placeholder='Search by title...' 
+                            className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors' 
+                        />
+                    </div>
+                    <div className='sm:w-64'>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>Filter by Status</label>
+                        <select 
+                            onChange={type_filter} 
+                            name="status" 
+                            className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
+                        >
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="deactive">Deactive</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div className='overflow-x-auto'>
-                <table className='w-full table-auto bg-white shadow-lg rounded-lg overflow-hidden'>
-                    <thead className='bg-gray-100 text-gray-700 uppercase text-sm'>
-                        <tr>
-                            <th className='py-4 px-6 text-left'>No</th>
-                            <th className='py-4 px-6 text-left'>Title</th>
-                            <th className='py-4 px-6 text-left'>Image</th>
-                            <th className='py-4 px-6 text-left'>Category</th>
-                            <th className='py-4 px-6 text-left'>Description</th>
-                            <th className='py-4 px-6 text-left'>Date</th>
-                            <th className='py-4 px-6 text-left'>Status</th>
-                            <th className='py-4 px-6 text-left'>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className='text-gray-600'>
-                        {news.length > 0 && news.slice((page - 1) * perPage, page * perPage).map((n,i) => (
-                            <tr key={i} className='border-t'>
-                                <td className='py-4 px-6'>{i+1}</td>
-                                <td className='py-4 px-6'>{ n.title.slice(0,15) }...</td>
-                                <td className='py-4 px-6'>
-                                    <img src={ n.image } alt="news post" className='w-10 h-10 rounded-full object-cover' />
-                                </td>
-                                <td className='py-4 px-6'>{ n.category }</td>
-                                <td className='py-4 px-6'>{ convert(n.description).slice(0,15) }...</td>
-                                <td className='py-4 px-6'>{ n.date }</td>
-
-                                {
-                                    store?.userInfo?.role === "admin" 
-                                    ?
-                                    <td className='py-4 px-6'>
-                                        {
-                                            n.status === "pending" && <span onClick={()=>update_status('active', n._id)} className='px-2 py-[2px] bg-blue-200 text-blue-800 rounded-md text-xs cursor-pointer'>{res.loader && res.id === n._id ? 'Loading...' : n.status} </span>
-                                        }
-                                        {
-                                            n.status === "active" && <span onClick={()=>update_status('deactive', n._id)} className='px-2 py-[2px] bg-green-200 text-green-800 rounded-md text-xs cursor-pointer'>{res.loader && res.id === n._id ? 'Loading...' : n.status} </span>
-                                        }
-                                        {
-                                            n.status === "deactive" && <span onClick={()=>update_status('active', n._id)} className='px-2 py-[2px] bg-red-200 text-red-800 rounded-md text-xs cursor-pointer'>{res.loader && res.id === n._id ? 'Loading...' : n.status} </span>
-                                        }
-                                    </td> 
-                                    :
-                                    <td className='py-4 px-6'>
-                                        {
-                                            n.status === "pending" && <span className='px-2 py-[2px] bg-blue-200 text-blue-800 rounded-md text-xs'>{res.loader && res.id === n._id ? 'Loading...' : n.status} </span>
-                                        }
-                                        {
-                                            n.status === "active" && <span className='px-2 py-[2px] bg-blue-200 text-blue-800 rounded-md text-xs'>{res.loader && res.id === n._id ? 'Loading...' : n.status} </span>
-                                        }
-                                        {
-                                            n.status === "deactive" && <span className='px-2 py-[2px] bg-blue-200 text-blue-800 rounded-md text-xs'>{res.loader && res.id === n._id ? 'Loading...' : n.status} </span>
-                                        }
+            {/* Modern Table */}
+            <div className='bg-white rounded-xl shadow-lg overflow-hidden'>
+                <div className='overflow-x-auto'>
+                    <table className='w-full'>
+                        <thead className='bg-gradient-to-r from-gray-50 to-gray-100'>
+                            <tr>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>#</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Image</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Title</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Category</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Description</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Date</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Status</th>
+                                <th className='px-8 py-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider'>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className='divide-y divide-gray-200'>
+                            {news.length > 0 && news.slice((page - 1) * perPage, page * perPage).map((n, i) => (
+                                <tr key={i} className='hover:bg-gray-50 transition-colors duration-200'>
+                                    {/* Row Number */}
+                                    <td className='px-8 py-6 whitespace-nowrap'>
+                                        <div className='flex items-center'>
+                                            <span className='text-lg font-bold text-gray-400'>#{(page - 1) * perPage + i + 1}</span>
+                                        </div>
                                     </td>
 
-                                }
+                                    {/* Image */}
+                                    <td className='px-8 py-6 whitespace-nowrap'>
+                                        <div className='flex items-center'>
+                                            <div className='relative'>
+                                                <img 
+                                                    src={n.image} 
+                                                    alt={n.title} 
+                                                    className='w-20 h-20 rounded-lg object-cover shadow-md'
+                                                    onError={(e) => {
+                                                        e.target.src = 'https://via.placeholder.com/80x80?text=No+Image';
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </td>
 
-                                
-                                <td className='py-4 px-6'>
-                                    <div className='flex gap-3 text-gray-500'>
-                                        <Link to="#" className='p-2 bg-blue-500 text-white rounded hover:bg-blue-800'>
-                                            <FaEye />
-                                        </Link>
-                                        {
-                                            store?.userInfo?.role === 'writer' && <>
-                                            <Link to={`/dashboard/news/edit/${n._id}`} className='p-2 bg-yellow-500 text-white rounded hover:bg-yellow-800'>
-                                                <FaEdit />
-                                            </Link>
+                                    {/* Title */}
+                                    <td className='px-8 py-6'>
+                                        <div className='max-w-xs'>
+                                            <h3 className='text-lg font-bold text-gray-900 leading-tight mb-1'>
+                                                {n.title}
+                                            </h3>
+                                        </div>
+                                    </td>
+
+                                    {/* Category */}
+                                    <td className='px-8 py-6 whitespace-nowrap'>
+                                        <span className='inline-flex px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800'>
+                                            {n.category}
+                                        </span>
+                                    </td>
+
+                                    {/* Description */}
+                                    <td className='px-8 py-6'>
+                                        <div className='max-w-sm'>
+                                            <p className='text-gray-600 text-sm leading-relaxed'>
+                                                {convert(n.description).slice(0, 100)}
+                                                {convert(n.description).length > 100 && '...'}
+                                            </p>
+                                        </div>
+                                    </td>
+
+                                    {/* Date */}
+                                    <td className='px-8 py-6 whitespace-nowrap'>
+                                        <div className='flex items-center text-gray-500 text-sm'>
+                                            <svg className='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' />
+                                            </svg>
+                                            {n.date}
+                                        </div>
+                                    </td>
+
+                                    {/* Status */}
+                                    <td className='px-8 py-6 whitespace-nowrap'>
+                                        {store?.userInfo?.role === "admin" ? (
+                                            <>
+                                                {n.status === "pending" && (
+                                                    <span 
+                                                        onClick={() => update_status('active', n._id)} 
+                                                        className='inline-flex px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200 transition-colors'
+                                                    >
+                                                        {res.loader && res.id === n._id ? 'Loading...' : n.status}
+                                                    </span>
+                                                )}
+                                                {n.status === "active" && (
+                                                    <span 
+                                                        onClick={() => update_status('deactive', n._id)} 
+                                                        className='inline-flex px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 cursor-pointer hover:bg-green-200 transition-colors'
+                                                    >
+                                                        {res.loader && res.id === n._id ? 'Loading...' : n.status}
+                                                    </span>
+                                                )}
+                                                {n.status === "deactive" && (
+                                                    <span 
+                                                        onClick={() => update_status('active', n._id)} 
+                                                        className='inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 cursor-pointer hover:bg-red-200 transition-colors'
+                                                    >
+                                                        {res.loader && res.id === n._id ? 'Loading...' : n.status}
+                                                    </span>
+                                                )}
                                             </>
-                                        }
-                                        <button onClick={ ()=> deleteNews(n._id) } to="#" className='p-2 bg-red-500 text-white rounded hover:bg-red-800'>
-                                            <FaTrash />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                                        ) : (
+                                            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                                                n.status === "pending" ? 'bg-blue-100 text-blue-800' :
+                                                n.status === "active" ? 'bg-green-100 text-green-800' :
+                                                'bg-red-100 text-red-800'
+                                            }`}>
+                                                {res.loader && res.id === n._id ? 'Loading...' : n.status}
+                                            </span>
+                                        )}
+                                    </td>
 
-                    </tbody>
+                                    {/* Actions */}
+                                    <td className='px-8 py-6 whitespace-nowrap'>
+                                        <div className='flex items-center gap-3'>
+                                            <Link 
+                                                to="#" 
+                                                className='p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors'
+                                                title='View News'
+                                            >
+                                                <FaEye className='w-4 h-4' />
+                                            </Link>
+                                            {store?.userInfo?.role === 'writer' && (
+                                                <Link 
+                                                    to={`/dashboard/news/edit/${n._id}`} 
+                                                    className='p-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors'
+                                                    title='Edit News'
+                                                >
+                                                    <FaEdit className='w-4 h-4' />
+                                                </Link>
+                                            )}
+                                            <button 
+                                                onClick={() => deleteNews(n._id)} 
+                                                className='p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors'
+                                                title='Delete News'
+                                            >
+                                                <FaTrash className='w-4 h-4' />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-                </table>
-
+                {/* Empty State */}
+                {news.length === 0 && (
+                    <div className='text-center py-16'>
+                        <div className='w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center'>
+                            <svg className='w-12 h-12 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z' />
+                            </svg>
+                        </div>
+                        <h3 className='text-lg font-medium text-gray-900 mb-2'>No news found</h3>
+                        <p className='text-gray-500'>Try adjusting your search or filter criteria.</p>
+                    </div>
+                )}
             </div>
 
-            <div className='flex justify-between items-center py-6'>
+            {/* Pagination */}
+            <div className='flex flex-col sm:flex-row justify-between items-center gap-4 py-6'>
                 <div className='flex items-center gap-4'>
-                    <label className='text-sm font-semibold'>News per Page: </label>
-                    <select value={perPage} 
-                        onChange={ (e)=>{ 
-                            setPerPage(parseInt(e.target.value)) 
-                            setPage(1)
-                        } } name="category" id="category" className='px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none'>
+                    <label className='text-sm font-medium text-gray-700'>News per Page:</label>
+                    <select 
+                        value={perPage} 
+                        onChange={(e) => { 
+                            setPerPage(parseInt(e.target.value)); 
+                            setPage(1);
+                        }} 
+                        className='px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
+                    >
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="15">15</option>
                         <option value="20">20</option>
                     </select>
                 </div>
-            
 
-                <div className='flex items-center gap-4 text-sm text-gray-600'>
-                    <span className='font-bold'>
-                        {(page - 1) * perPage + 1}-{Math.min(page * perPage, news.length)} of {news.length}
+                <div className='flex items-center gap-4'>
+                    <span className='text-sm text-gray-600 font-medium'>
+                        Showing {(page - 1) * perPage + 1}-{Math.min(page * perPage, news.length)} of {news.length} news
                     </span>
                     <div className='flex gap-2'>
-                        <IoIosArrowBack onClick={()=>{
-                            if (page > 1) setPage(page - 1);
-                        }} className='w-6 h-6 text-gray-400 cursor-pointer hover:text-gray-800'/>
-                        <IoIosArrowForward onClick={()=>{
-                            if (page < pages) setPage(page + 1);
-                        }} className='w-6 h-6 text-gray-400 cursor-pointer hover:text-gray-800'/>
+                        <button
+                            onClick={() => {
+                                if (page > 1) setPage(page - 1);
+                            }}
+                            disabled={page === 1}
+                            className='p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                        >
+                            <IoIosArrowBack className='w-5 h-5' />
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (page < pages) setPage(page + 1);
+                            }}
+                            disabled={page === pages}
+                            className='p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                        >
+                            <IoIosArrowForward className='w-5 h-5' />
+                        </button>
                     </div>
                 </div>
             </div>
